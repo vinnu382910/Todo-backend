@@ -23,6 +23,10 @@ const TaskSchema = new Schema({
         enum: ['pending', 'in progress', 'done', 'completed'],
         default: 'pending', // Default status is 'pending'
     },
+    deadline: {
+        type: Date,
+        required: true,  // Deadline is now a required field
+    },
     createdAt: {
         type: Date,
         default: Date.now,  // Automatically set the current date

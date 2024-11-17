@@ -2,7 +2,7 @@ const TaskModel = require('../Models/Task');
 
 // Create a new task
 exports.createTask = async (req, res) => {
-  const { title, description, status } = req.body;
+  const { title, description, status, deadline } = req.body;
 
   try {
     const newTask = new TaskModel({
@@ -10,7 +10,10 @@ exports.createTask = async (req, res) => {
       title,
       description,
       status,
+      deadline,  // Save deadline
     });
+    console.log(deadline)
+    console.log(newTask)
     await newTask.save();
     return res.status(201).json({ message: 'Task created successfully!', task: newTask });
   } catch (error) {
@@ -31,13 +34,13 @@ exports.getTasks = async (req, res) => {
 // Update a task by ID
 exports.updateTask = async (req, res) => {
   const { taskId } = req.params;
-  const { title, description, status } = req.body;
+  const { title, description, status, deadline } = req.body;
 
   try {
     const updatedTask = await TaskModel.findOneAndUpdate(
       { _id: taskId, userId: req.user._id },
-      { title, description, status, updatedAt: Date.now() },
-      { new: true } //return the updated tasks
+      { title, description, status, deadline, updatedAt: Date.now() },
+      { new: true } // Return the updated task
     );
 
     if (!updatedTask) {
@@ -49,6 +52,7 @@ exports.updateTask = async (req, res) => {
     return res.status(500).json({ message: 'Error updating task', error });
   }
 };
+
 
 // Delete a task by ID
 exports.deleteTask = async (req, res) => {
